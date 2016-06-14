@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.OtherpushMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Otherpush" >
+    <id column="oid" property="oid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="pushtime" property="pushtime" jdbcType="VARCHAR" />
+    <result column="pushcountcycle" property="pushcountcycle" jdbcType="VARCHAR" />
+    <result column="pushcount" property="pushcount" jdbcType="INTEGER" />
+    <result column="pushcountnum" property="pushcountnum" jdbcType="INTEGER" />
+    <result column="pushobject" property="pushobject" jdbcType="VARCHAR" />
+    <result column="pushstatus" property="pushstatus" jdbcType="VARCHAR" />
+    <result column="executetime" property="executetime" jdbcType="TIMESTAMP" />
+    <result column="executecount" property="executecount" jdbcType="INTEGER" />
+    <result column="inserttime" property="inserttime" jdbcType="TIMESTAMP" />
+    <result column="usertype" property="usertype" jdbcType="VARCHAR" />
+    <result column="pushtype" property="pushtype" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    oid, userid, pushtime, pushcountcycle, pushcount, pushcountnum, pushobject, pushstatus, 
+    executetime, executecount, inserttime, usertype, pushtype
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mybatis.entity.OtherpushExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from otherpush
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from otherpush
+    where oid = #{oid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByType" resultMap="BaseResultMap" parameterType="com.mybatis.entity.Otherpush" >
+    select *
+    from otherpush
+    where userid=#{userid} and usertype=#{usertype} 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from otherpush
+    where oid = #{oid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.OtherpushExample" >
+    delete from otherpush
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Otherpush" >
+    insert into otherpush (oid, userid, pushtime, 
+      pushcountcycle, pushcount, pushcountnum, 
+      pushobject, pushstatus, executetime, 
+      executecount, inserttime, usertype, 
+      pushtype)
+    values (#{oid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{pushtime,jdbcType=VARCHAR}, 
+      #{pushcountcycle,jdbcType=VARCHAR}, #{pushcount,jdbcType=INTEGER}, #{pushcountnum,jdbcType=INTEGER}, 
+      #{pushobject,jdbcType=VARCHAR}, #{pushstatus,jdbcType=VARCHAR}, #{executetime,jdbcType=TIMESTAMP}, 
+      #{executecount,jdbcType=INTEGER}, #{inserttime,jdbcType=TIMESTAMP}, #{usertype,jdbcType=VARCHAR}, 
+      #{pushtype,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Otherpush" >
+    insert into otherpush
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oid != null" >
+        oid,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="pushtime != null" >
+        pushtime,
+      </if>
+      <if test="pushcountcycle != null" >
+        pushcountcycle,
+      </if>
+      <if test="pushcount != null" >
+        pushcount,
+      </if>
+      <if test="pushcountnum != null" >
+        pushcountnum,
+      </if>
+      <if test="pushobject != null" >
+        pushobject,
+      </if>
+      <if test="pushstatus != null" >
+        pushstatus,
+      </if>
+      <if test="executetime != null" >
+        executetime,
+      </if>
+      <if test="executecount != null" >
+        executecount,
+      </if>
+      <if test="inserttime != null" >
+        inserttime,
+      </if>
+      <if test="usertype != null" >
+        usertype,
+      </if>
+      <if test="pushtype != null" >
+        pushtype,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oid != null" >
+        #{oid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="pushtime != null" >
+        #{pushtime,jdbcType=VARCHAR},
+      </if>
+      <if test="pushcountcycle != null" >
+        #{pushcountcycle,jdbcType=VARCHAR},
+      </if>
+      <if test="pushcount != null" >
+        #{pushcount,jdbcType=INTEGER},
+      </if>
+      <if test="pushcountnum != null" >
+        #{pushcountnum,jdbcType=INTEGER},
+      </if>
+      <if test="pushobject != null" >
+        #{pushobject,jdbcType=VARCHAR},
+      </if>
+      <if test="pushstatus != null" >
+        #{pushstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="executetime != null" >
+        #{executetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="executecount != null" >
+        #{executecount,jdbcType=INTEGER},
+      </if>
+      <if test="inserttime != null" >
+        #{inserttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usertype != null" >
+        #{usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="pushtype != null" >
+        #{pushtype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mybatis.entity.OtherpushExample" resultType="java.lang.Integer" >
+    select count(*) from otherpush
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update otherpush
+    <set >
+      <if test="record.oid != null" >
+        oid = #{record.oid,jdbcType=INTEGER},
+      </if>
+      <if test="record.userid != null" >
+        userid = #{record.userid,jdbcType=INTEGER},
+      </if>
+      <if test="record.pushtime != null" >
+        pushtime = #{record.pushtime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pushcountcycle != null" >
+        pushcountcycle = #{record.pushcountcycle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pushcount != null" >
+        pushcount = #{record.pushcount,jdbcType=INTEGER},
+      </if>
+      <if test="record.pushcountnum != null" >
+        pushcountnum = #{record.pushcountnum,jdbcType=INTEGER},
+      </if>
+      <if test="record.pushobject != null" >
+        pushobject = #{record.pushobject,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pushstatus != null" >
+        pushstatus = #{record.pushstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.executetime != null" >
+        executetime = #{record.executetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.executecount != null" >
+        executecount = #{record.executecount,jdbcType=INTEGER},
+      </if>
+      <if test="record.inserttime != null" >
+        inserttime = #{record.inserttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.usertype != null" >
+        usertype = #{record.usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pushtype != null" >
+        pushtype = #{record.pushtype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update otherpush
+    set oid = #{record.oid,jdbcType=INTEGER},
+      userid = #{record.userid,jdbcType=INTEGER},
+      pushtime = #{record.pushtime,jdbcType=VARCHAR},
+      pushcountcycle = #{record.pushcountcycle,jdbcType=VARCHAR},
+      pushcount = #{record.pushcount,jdbcType=INTEGER},
+      pushcountnum = #{record.pushcountnum,jdbcType=INTEGER},
+      pushobject = #{record.pushobject,jdbcType=VARCHAR},
+      pushstatus = #{record.pushstatus,jdbcType=VARCHAR},
+      executetime = #{record.executetime,jdbcType=TIMESTAMP},
+      executecount = #{record.executecount,jdbcType=INTEGER},
+      inserttime = #{record.inserttime,jdbcType=TIMESTAMP},
+      usertype = #{record.usertype,jdbcType=VARCHAR},
+      pushtype = #{record.pushtype,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Otherpush" >
+    update otherpush
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="pushtime != null" >
+        pushtime = #{pushtime,jdbcType=VARCHAR},
+      </if>
+      <if test="pushcountcycle != null" >
+        pushcountcycle = #{pushcountcycle,jdbcType=VARCHAR},
+      </if>
+      <if test="pushcount != null" >
+        pushcount = #{pushcount,jdbcType=INTEGER},
+      </if>
+      <if test="pushcountnum != null" >
+        pushcountnum = #{pushcountnum,jdbcType=INTEGER},
+      </if>
+      <if test="pushobject != null" >
+        pushobject = #{pushobject,jdbcType=VARCHAR},
+      </if>
+      <if test="pushstatus != null" >
+        pushstatus = #{pushstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="executetime != null" >
+        executetime = #{executetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="executecount != null" >
+        executecount = #{executecount,jdbcType=INTEGER},
+      </if>
+      <if test="inserttime != null" >
+        inserttime = #{inserttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usertype != null" >
+        usertype = #{usertype,jdbcType=VARCHAR},
+      </if>
+      <if test="pushtype != null" >
+        pushtype = #{pushtype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where oid = #{oid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Otherpush" >
+    update otherpush
+    set userid = #{userid,jdbcType=INTEGER},
+      pushtime = #{pushtime,jdbcType=VARCHAR},
+      pushcountcycle = #{pushcountcycle,jdbcType=VARCHAR},
+      pushcount = #{pushcount,jdbcType=INTEGER},
+      pushcountnum = #{pushcountnum,jdbcType=INTEGER},
+      pushobject = #{pushobject,jdbcType=VARCHAR},
+      pushstatus = #{pushstatus,jdbcType=VARCHAR},
+      executetime = #{executetime,jdbcType=TIMESTAMP},
+      executecount = #{executecount,jdbcType=INTEGER},
+      inserttime = #{inserttime,jdbcType=TIMESTAMP},
+      usertype = #{usertype,jdbcType=VARCHAR},
+      pushtype = #{pushtype,jdbcType=VARCHAR}
+    where oid = #{oid,jdbcType=INTEGER}
+  </update>
+</mapper>

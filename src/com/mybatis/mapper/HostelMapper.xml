@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.HostelMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Hostel" >
+    <id column="hid" property="hid" jdbcType="INTEGER" />
+    <result column="bid" property="bid" jdbcType="INTEGER" />
+    <result column="arid" property="arid" jdbcType="INTEGER" />
+    <result column="hname" property="hname" jdbcType="VARCHAR" />
+    <result column="haddress" property="haddress" jdbcType="VARCHAR" />
+    <result column="hphone" property="hphone" jdbcType="VARCHAR" />
+    <result column="htel" property="htel" jdbcType="VARCHAR" />
+    <result column="htag" property="htag" jdbcType="VARCHAR" />
+    <result column="hscore" property="hscore" jdbcType="VARCHAR" />
+    <result column="pauthentic" property="pauthentic" jdbcType="VARCHAR" />
+    <result column="Pbuscard" property="pbuscard" jdbcType="VARCHAR" />
+    <result column="bcancel" property="bcancel" jdbcType="VARCHAR" />
+    <result column="breport" property="breport" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.mybatis.entity.Hostel" extends="BaseResultMap" >
+    <result column="hsynopsis" property="hsynopsis" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    hid, bid, arid, hname, haddress, hphone, htel, htag, hscore, pauthentic, Pbuscard, 
+    bcancel, breport
+  </sql>
+  <sql id="Blob_Column_List" >
+    hsynopsis
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.HostelExample" >
+    select * from hostel order by hid desc limit ${page*rows},${rows} 
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mybatis.entity.HostelExample" >
+    select * from hostel where bid=#{bid} order by hid desc limit ${page*rows},${rows} 
+  </select>
+    <select id="selectByAdmin" resultMap="BaseResultMap" >
+     SELECT * FROM hostel WHERE hphone IS NOT NULL  AND hphone !=''
+  </select>
+  <select id="selectByPauthentic" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from hostel where pauthentic=#{pauthentic} order by hid desc
+  </select>
+  
+  <select id="getLastId" resultType="java.lang.Integer">
+    select hid from hostel order by hid DESC LIMIT 1
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from hostel
+    where hid = #{hid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from hostel
+    where hid = #{hid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.HostelExample" >
+    delete from hostel
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Hostel" >
+    insert into hostel (hid, bid, arid, 
+      hname, haddress, hphone, 
+      htel, htag, hscore, 
+      pauthentic, Pbuscard, bcancel, 
+      breport, hsynopsis)
+    values (#{hid,jdbcType=INTEGER}, #{bid,jdbcType=INTEGER}, #{arid,jdbcType=INTEGER}, 
+      #{hname,jdbcType=VARCHAR}, #{haddress,jdbcType=VARCHAR}, #{hphone,jdbcType=VARCHAR}, 
+      #{htel,jdbcType=VARCHAR}, #{htag,jdbcType=VARCHAR}, #{hscore,jdbcType=VARCHAR}, 
+      #{pauthentic,jdbcType=VARCHAR}, #{pbuscard,jdbcType=VARCHAR}, #{bcancel,jdbcType=VARCHAR}, 
+      #{breport,jdbcType=VARCHAR}, #{hsynopsis,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Hostel" >
+    insert into hostel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="hid != null" >
+        hid,
+      </if>
+      <if test="bid != null" >
+        bid,
+      </if>
+      <if test="arid != null" >
+        arid,
+      </if>
+      <if test="hname != null" >
+        hname,
+      </if>
+      <if test="haddress != null" >
+        haddress,
+      </if>
+      <if test="hphone != null" >
+        hphone,
+      </if>
+      <if test="htel != null" >
+        htel,
+      </if>
+      <if test="htag != null" >
+        htag,
+      </if>
+      <if test="hscore != null" >
+        hscore,
+      </if>
+      <if test="pauthentic != null" >
+        pauthentic,
+      </if>
+      <if test="pbuscard != null" >
+        Pbuscard,
+      </if>
+      <if test="bcancel != null" >
+        bcancel,
+      </if>
+      <if test="breport != null" >
+        breport,
+      </if>
+      <if test="hsynopsis != null" >
+        hsynopsis,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="hid != null" >
+        #{hid,jdbcType=INTEGER},
+      </if>
+      <if test="bid != null" >
+        #{bid,jdbcType=INTEGER},
+      </if>
+      <if test="arid != null" >
+        #{arid,jdbcType=INTEGER},
+      </if>
+      <if test="hname != null" >
+        #{hname,jdbcType=VARCHAR},
+      </if>
+      <if test="haddress != null" >
+        #{haddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hphone != null" >
+        #{hphone,jdbcType=VARCHAR},
+      </if>
+      <if test="htel != null" >
+        #{htel,jdbcType=VARCHAR},
+      </if>
+      <if test="htag != null" >
+        #{htag,jdbcType=VARCHAR},
+      </if>
+      <if test="hscore != null" >
+        #{hscore,jdbcType=VARCHAR},
+      </if>
+      <if test="pauthentic != null" >
+        #{pauthentic,jdbcType=VARCHAR},
+      </if>
+      <if test="pbuscard != null" >
+        #{pbuscard,jdbcType=VARCHAR},
+      </if>
+      <if test="bcancel != null" >
+        #{bcancel,jdbcType=VARCHAR},
+      </if>
+      <if test="breport != null" >
+        #{breport,jdbcType=VARCHAR},
+      </if>
+      <if test="hsynopsis != null" >
+        #{hsynopsis,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" resultType="java.lang.Integer" >
+    select count(*) from hostel where bid=#{bid}
+  </select>
+  <select id="countByLastId" resultType="java.lang.Integer" >
+    select hid from hostel ORDER BY hid desc limit 1
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update hostel
+    <set >
+      <if test="record.hid != null" >
+        hid = #{record.hid,jdbcType=INTEGER},
+      </if>
+      <if test="record.bid != null" >
+        bid = #{record.bid,jdbcType=INTEGER},
+      </if>
+      <if test="record.arid != null" >
+        arid = #{record.arid,jdbcType=INTEGER},
+      </if>
+      <if test="record.hname != null" >
+        hname = #{record.hname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.haddress != null" >
+        haddress = #{record.haddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hphone != null" >
+        hphone = #{record.hphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.htel != null" >
+        htel = #{record.htel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.htag != null" >
+        htag = #{record.htag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hscore != null" >
+        hscore = #{record.hscore,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pauthentic != null" >
+        pauthentic = #{record.pauthentic,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pbuscard != null" >
+        Pbuscard = #{record.pbuscard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bcancel != null" >
+        bcancel = #{record.bcancel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.breport != null" >
+        breport = #{record.breport,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hsynopsis != null" >
+        hsynopsis = #{record.hsynopsis,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update hostel
+    set hid = #{record.hid,jdbcType=INTEGER},
+      bid = #{record.bid,jdbcType=INTEGER},
+      arid = #{record.arid,jdbcType=INTEGER},
+      hname = #{record.hname,jdbcType=VARCHAR},
+      haddress = #{record.haddress,jdbcType=VARCHAR},
+      hphone = #{record.hphone,jdbcType=VARCHAR},
+      htel = #{record.htel,jdbcType=VARCHAR},
+      htag = #{record.htag,jdbcType=VARCHAR},
+      hscore = #{record.hscore,jdbcType=VARCHAR},
+      pauthentic = #{record.pauthentic,jdbcType=VARCHAR},
+      Pbuscard = #{record.pbuscard,jdbcType=VARCHAR},
+      bcancel = #{record.bcancel,jdbcType=VARCHAR},
+      breport = #{record.breport,jdbcType=VARCHAR},
+      hsynopsis = #{record.hsynopsis,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update hostel
+    set hid = #{record.hid,jdbcType=INTEGER},
+      bid = #{record.bid,jdbcType=INTEGER},
+      arid = #{record.arid,jdbcType=INTEGER},
+      hname = #{record.hname,jdbcType=VARCHAR},
+      haddress = #{record.haddress,jdbcType=VARCHAR},
+      hphone = #{record.hphone,jdbcType=VARCHAR},
+      htel = #{record.htel,jdbcType=VARCHAR},
+      htag = #{record.htag,jdbcType=VARCHAR},
+      hscore = #{record.hscore,jdbcType=VARCHAR},
+      pauthentic = #{record.pauthentic,jdbcType=VARCHAR},
+      Pbuscard = #{record.pbuscard,jdbcType=VARCHAR},
+      bcancel = #{record.bcancel,jdbcType=VARCHAR},
+      breport = #{record.breport,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Hostel" >
+    update hostel
+    <set >
+      <if test="bid != null" >
+        bid = #{bid,jdbcType=INTEGER},
+      </if>
+      <if test="arid != null" >
+        arid = #{arid,jdbcType=INTEGER},
+      </if>
+      <if test="hname != null" >
+        hname = #{hname,jdbcType=VARCHAR},
+      </if>
+      <if test="haddress != null" >
+        haddress = #{haddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hphone != null" >
+        hphone = #{hphone,jdbcType=VARCHAR},
+      </if>
+      <if test="htel != null" >
+        htel = #{htel,jdbcType=VARCHAR},
+      </if>
+      <if test="htag != null" >
+        htag = #{htag,jdbcType=VARCHAR},
+      </if>
+      <if test="hscore != null" >
+        hscore = #{hscore,jdbcType=VARCHAR},
+      </if>
+      <if test="pauthentic != null" >
+        pauthentic = #{pauthentic,jdbcType=VARCHAR},
+      </if>
+      <if test="pbuscard != null" >
+        Pbuscard = #{pbuscard,jdbcType=VARCHAR},
+      </if>
+      <if test="bcancel != null" >
+        bcancel = #{bcancel,jdbcType=VARCHAR},
+      </if>
+      <if test="breport != null" >
+        breport = #{breport,jdbcType=VARCHAR},
+      </if>
+      <if test="hsynopsis != null" >
+        hsynopsis = #{hsynopsis,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where hid = #{hid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mybatis.entity.Hostel" >
+    update hostel
+    set bid = #{bid,jdbcType=INTEGER},
+      arid = #{arid,jdbcType=INTEGER},
+      hname = #{hname,jdbcType=VARCHAR},
+      haddress = #{haddress,jdbcType=VARCHAR},
+      hphone = #{hphone,jdbcType=VARCHAR},
+      htel = #{htel,jdbcType=VARCHAR},
+      htag = #{htag,jdbcType=VARCHAR},
+      hscore = #{hscore,jdbcType=VARCHAR},
+      pauthentic = #{pauthentic,jdbcType=VARCHAR},
+      Pbuscard = #{pbuscard,jdbcType=VARCHAR},
+      bcancel = #{bcancel,jdbcType=VARCHAR},
+      breport = #{breport,jdbcType=VARCHAR},
+      hsynopsis = #{hsynopsis,jdbcType=LONGVARCHAR}
+    where hid = #{hid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Hostel" >
+    update hostel
+    set bid = #{bid,jdbcType=INTEGER},
+      arid = #{arid,jdbcType=INTEGER},
+      hname = #{hname,jdbcType=VARCHAR},
+      haddress = #{haddress,jdbcType=VARCHAR},
+      hphone = #{hphone,jdbcType=VARCHAR},
+      htel = #{htel,jdbcType=VARCHAR},
+      htag = #{htag,jdbcType=VARCHAR},
+      hscore = #{hscore,jdbcType=VARCHAR},
+      pauthentic = #{pauthentic,jdbcType=VARCHAR},
+      Pbuscard = #{pbuscard,jdbcType=VARCHAR},
+      bcancel = #{bcancel,jdbcType=VARCHAR},
+      breport = #{breport,jdbcType=VARCHAR}
+    where hid = #{hid,jdbcType=INTEGER}
+  </update>
+</mapper>

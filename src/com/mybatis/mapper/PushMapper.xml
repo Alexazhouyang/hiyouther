@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.PushMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Push" >
+    <id column="puid" property="puid" jdbcType="INTEGER" />
+    <result column="pname" property="pname" jdbcType="VARCHAR" />
+    <result column="iflook" property="iflook" jdbcType="VARCHAR" />
+    <result column="ptime" property="ptime" jdbcType="TIMESTAMP" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.mybatis.entity.Push" extends="BaseResultMap" >
+    <result column="pcontent" property="pcontent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    puid, pname, iflook, ptime, uid, type
+  </sql>
+  <sql id="Blob_Column_List" >
+    pcontent
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.PushExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from push
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+   <select id="countByM"  resultType="java.lang.Integer" >
+    select count(*) from push where uid=#{uid} and type>2
+    <if test="option != null">
+      and  iflook='0'
+    </if>
+  </select>
+   <select id="countByB" resultType="java.lang.Integer" >
+    select count(*) from push where uid=#{uid} and 2>=type
+    <if test="option != null">
+      and  iflook='0'
+    </if> 
+  </select>
+   <delete id="deleteByM" parameterType="java.lang.Integer" >
+    delete from push
+     where uid=#{uid} and type>2 
+  </delete>
+  <delete id="deleteByB" parameterType="java.lang.Integer" >
+    delete from push
+    where uid=#{uid} and 2>=type 
+  </delete>
+    <select id="selectByM" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.PushExample" >
+    select * from push where uid=#{uid} and type>2 order by  iflook desc limit ${page*rows},${rows} 
+  </select>
+  <select id="selectByB" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.PushExample" >
+    select * from push where uid=#{uid} and 2>=type  order by  iflook desc limit ${page*rows},${rows}
+  </select>
+  <select id="selectPush" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.HostelExample" >
+    select * from push order by puid desc limit ${page*rows},${rows} 
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mybatis.entity.PushExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from push
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from push
+    where puid = #{puid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from push
+    where puid = #{puid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.PushExample" >
+    delete from push
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Push" >
+    insert into push (puid, pname, iflook, 
+      ptime, uid, type, 
+      pcontent)
+    values (#{puid,jdbcType=INTEGER}, #{pname,jdbcType=VARCHAR}, #{iflook,jdbcType=VARCHAR}, 
+      #{ptime,jdbcType=TIMESTAMP}, #{uid,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+      #{pcontent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Push" >
+    insert into push
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="puid != null" >
+        puid,
+      </if>
+      <if test="pname != null" >
+        pname,
+      </if>
+      <if test="iflook != null" >
+        iflook,
+      </if>
+      <if test="ptime != null" >
+        ptime,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="pcontent != null" >
+        pcontent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="puid != null" >
+        #{puid,jdbcType=INTEGER},
+      </if>
+      <if test="pname != null" >
+        #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="iflook != null" >
+        #{iflook,jdbcType=VARCHAR},
+      </if>
+      <if test="ptime != null" >
+        #{ptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="pcontent != null" >
+        #{pcontent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mybatis.entity.PushExample" resultType="java.lang.Integer" >
+    select count(*) from push
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update push
+    <set >
+      <if test="record.puid != null" >
+        puid = #{record.puid,jdbcType=INTEGER},
+      </if>
+      <if test="record.pname != null" >
+        pname = #{record.pname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.iflook != null" >
+        iflook = #{record.iflook,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ptime != null" >
+        ptime = #{record.ptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.uid != null" >
+        uid = #{record.uid,jdbcType=INTEGER},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.pcontent != null" >
+        pcontent = #{record.pcontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update push
+    set puid = #{record.puid,jdbcType=INTEGER},
+      pname = #{record.pname,jdbcType=VARCHAR},
+      iflook = #{record.iflook,jdbcType=VARCHAR},
+      ptime = #{record.ptime,jdbcType=TIMESTAMP},
+      uid = #{record.uid,jdbcType=INTEGER},
+      type = #{record.type,jdbcType=INTEGER},
+      pcontent = #{record.pcontent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update push
+    set puid = #{record.puid,jdbcType=INTEGER},
+      pname = #{record.pname,jdbcType=VARCHAR},
+      iflook = #{record.iflook,jdbcType=VARCHAR},
+      ptime = #{record.ptime,jdbcType=TIMESTAMP},
+      uid = #{record.uid,jdbcType=INTEGER},
+      type = #{record.type,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Push" >
+    update push
+    <set >
+      <if test="pname != null" >
+        pname = #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="iflook != null" >
+        iflook = #{iflook,jdbcType=VARCHAR},
+      </if>
+      <if test="ptime != null" >
+        ptime = #{ptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="pcontent != null" >
+        pcontent = #{pcontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where puid = #{puid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mybatis.entity.Push" >
+    update push
+    set pname = #{pname,jdbcType=VARCHAR},
+      iflook = #{iflook,jdbcType=VARCHAR},
+      ptime = #{ptime,jdbcType=TIMESTAMP},
+      uid = #{uid,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      pcontent = #{pcontent,jdbcType=LONGVARCHAR}
+    where puid = #{puid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Push" >
+    update push
+    set pname = #{pname,jdbcType=VARCHAR},
+      iflook = #{iflook,jdbcType=VARCHAR},
+      ptime = #{ptime,jdbcType=TIMESTAMP},
+      uid = #{uid,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER}
+    where puid = #{puid,jdbcType=INTEGER}
+  </update>
+</mapper>

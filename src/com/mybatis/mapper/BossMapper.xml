@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.BossMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Boss" >
+    <id column="bid" property="bid" jdbcType="INTEGER" />
+    <result column="busername" property="busername" jdbcType="VARCHAR" />
+    <result column="btouxiang" property="btouxiang" jdbcType="VARCHAR" />
+    <result column="btel" property="btel" jdbcType="VARCHAR" />
+    <result column="bphone" property="bphone" jdbcType="VARCHAR" />
+    <result column="bqq" property="bqq" jdbcType="VARCHAR" />
+    <result column="bemail" property="bemail" jdbcType="VARCHAR" />
+    <result column="bweibo" property="bweibo" jdbcType="VARCHAR" />
+    <result column="bwechat" property="bwechat" jdbcType="VARCHAR" />
+    <result column="bpassword" property="bpassword" jdbcType="VARCHAR" />
+    <result column="brealname" property="brealname" jdbcType="VARCHAR" />
+    <result column="bidcard" property="bidcard" jdbcType="VARCHAR" />
+    <result column="bcontact" property="bcontact" jdbcType="VARCHAR" />
+    <result column="bsex" property="bsex" jdbcType="VARCHAR" />
+    <result column="baddress" property="baddress" jdbcType="VARCHAR" />
+    <result column="bsign" property="bsign" jdbcType="VARCHAR" />
+    <result column="bcancel" property="bcancel" jdbcType="INTEGER" />
+    <result column="bcredit" property="bcredit" jdbcType="VARCHAR" />
+    <result column="breport" property="breport" jdbcType="VARCHAR" />
+    <result column="binsettime" property="binsettime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    bid, busername, btouxiang, btel, bphone, bqq, bemail, bweibo, bwechat, bpassword, 
+    brealname, bidcard, bcontact, bsex, baddress, bsign, bcancel, bcredit, breport, binsettime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    SELECT * FROM boss WHERE bphone IS NOT NULL  AND bphone !=''
+  </select>
+    <!-- forvoid -->
+    <select id="selectAllConfirm" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss
+    where bcancel = #{bcancel}
+  </select>
+    
+  <select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss
+    where bphone = #{bphone}
+  </select>
+  <select id="selectByEmail" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss
+    where bemail = #{bemail}
+  </select>
+  <select id="selectByQQ" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss
+    where bqq = #{bqq}
+  </select>
+  <select id="selectByQQLink" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss
+    where bqq like '${bqq}%'
+  </select>
+  <select id="selectByWeiBo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss
+    where bweibo = #{bweibo}
+  </select>
+  <select id="selectByWechat" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss
+    where bwechat = #{bwechat}
+  </select>
+  
+  
+  
+  
+  
+  <!-- /forvoid -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss
+    where bid = #{bid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from boss
+    where bid = #{bid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.BossExample" >
+    delete from boss
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Boss" useGeneratedKeys="true" keyProperty="bid">
+    insert into boss (bid, busername, btouxiang, 
+      btel, bphone, bqq, 
+      bemail, bweibo, bwechat, 
+      bpassword, brealname, bidcard, 
+      bcontact, bsex, baddress, 
+      bsign, bcancel, bcredit, 
+      breport, binsettime)
+    values (#{bid,jdbcType=INTEGER}, #{busername,jdbcType=VARCHAR}, #{btouxiang,jdbcType=VARCHAR}, 
+      #{btel,jdbcType=VARCHAR}, #{bphone,jdbcType=VARCHAR}, #{bqq,jdbcType=VARCHAR}, 
+      #{bemail,jdbcType=VARCHAR}, #{bweibo,jdbcType=VARCHAR}, #{bwechat,jdbcType=VARCHAR}, 
+      #{bpassword,jdbcType=VARCHAR}, #{brealname,jdbcType=VARCHAR}, #{bidcard,jdbcType=VARCHAR}, 
+      #{bcontact,jdbcType=VARCHAR}, #{bsex,jdbcType=VARCHAR}, #{baddress,jdbcType=VARCHAR}, 
+      #{bsign,jdbcType=VARCHAR}, #{bcancel,jdbcType=INTEGER}, #{bcredit,jdbcType=VARCHAR}, 
+      #{breport,jdbcType=VARCHAR}, #{binsettime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Boss" useGeneratedKeys="true" keyProperty="bid">
+    insert into boss
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bid != null" >
+        bid,
+      </if>
+      <if test="busername != null" >
+        busername,
+      </if>
+      <if test="btouxiang != null" >
+        btouxiang,
+      </if>
+      <if test="btel != null" >
+        btel,
+      </if>
+      <if test="bphone != null" >
+        bphone,
+      </if>
+      <if test="bqq != null" >
+        bqq,
+      </if>
+      <if test="bemail != null" >
+        bemail,
+      </if>
+      <if test="bweibo != null" >
+        bweibo,
+      </if>
+      <if test="bwechat != null" >
+        bwechat,
+      </if>
+      <if test="bpassword != null" >
+        bpassword,
+      </if>
+      <if test="brealname != null" >
+        brealname,
+      </if>
+      <if test="bidcard != null" >
+        bidcard,
+      </if>
+      <if test="bcontact != null" >
+        bcontact,
+      </if>
+      <if test="bsex != null" >
+        bsex,
+      </if>
+      <if test="baddress != null" >
+        baddress,
+      </if>
+      <if test="bsign != null" >
+        bsign,
+      </if>
+      <if test="bcancel != null" >
+        bcancel,
+      </if>
+      <if test="bcredit != null" >
+        bcredit,
+      </if>
+      <if test="breport != null" >
+        breport,
+      </if>
+      <if test="binsettime != null" >
+        binsettime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bid != null" >
+        #{bid,jdbcType=INTEGER},
+      </if>
+      <if test="busername != null" >
+        #{busername,jdbcType=VARCHAR},
+      </if>
+      <if test="btouxiang != null" >
+        #{btouxiang,jdbcType=VARCHAR},
+      </if>
+      <if test="btel != null" >
+        #{btel,jdbcType=VARCHAR},
+      </if>
+      <if test="bphone != null" >
+        #{bphone,jdbcType=VARCHAR},
+      </if>
+      <if test="bqq != null" >
+        #{bqq,jdbcType=VARCHAR},
+      </if>
+      <if test="bemail != null" >
+        #{bemail,jdbcType=VARCHAR},
+      </if>
+      <if test="bweibo != null" >
+        #{bweibo,jdbcType=VARCHAR},
+      </if>
+      <if test="bwechat != null" >
+        #{bwechat,jdbcType=VARCHAR},
+      </if>
+      <if test="bpassword != null" >
+        #{bpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="brealname != null" >
+        #{brealname,jdbcType=VARCHAR},
+      </if>
+      <if test="bidcard != null" >
+        #{bidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="bcontact != null" >
+        #{bcontact,jdbcType=VARCHAR},
+      </if>
+      <if test="bsex != null" >
+        #{bsex,jdbcType=VARCHAR},
+      </if>
+      <if test="baddress != null" >
+        #{baddress,jdbcType=VARCHAR},
+      </if>
+      <if test="bsign != null" >
+        #{bsign,jdbcType=VARCHAR},
+      </if>
+      <if test="bcancel != null" >
+        #{bcancel,jdbcType=INTEGER},
+      </if>
+      <if test="bcredit != null" >
+        #{bcredit,jdbcType=VARCHAR},
+      </if>
+      <if test="breport != null" >
+        #{breport,jdbcType=VARCHAR},
+      </if>
+      <if test="binsettime != null" >
+        #{binsettime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mybatis.entity.BossExample" resultType="java.lang.Integer" >
+    select count(*) from boss
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update boss
+    <set >
+      <if test="record.bid != null" >
+        bid = #{record.bid,jdbcType=INTEGER},
+      </if>
+      <if test="record.busername != null" >
+        busername = #{record.busername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.btouxiang != null" >
+        btouxiang = #{record.btouxiang,jdbcType=VARCHAR},
+      </if>
+      <if test="record.btel != null" >
+        btel = #{record.btel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bphone != null" >
+        bphone = #{record.bphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bqq != null" >
+        bqq = #{record.bqq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bemail != null" >
+        bemail = #{record.bemail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bweibo != null" >
+        bweibo = #{record.bweibo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bwechat != null" >
+        bwechat = #{record.bwechat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bpassword != null" >
+        bpassword = #{record.bpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.brealname != null" >
+        brealname = #{record.brealname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bidcard != null" >
+        bidcard = #{record.bidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bcontact != null" >
+        bcontact = #{record.bcontact,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bsex != null" >
+        bsex = #{record.bsex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.baddress != null" >
+        baddress = #{record.baddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bsign != null" >
+        bsign = #{record.bsign,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bcancel != null" >
+        bcancel = #{record.bcancel,jdbcType=INTEGER},
+      </if>
+      <if test="record.bcredit != null" >
+        bcredit = #{record.bcredit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.breport != null" >
+        breport = #{record.breport,jdbcType=VARCHAR},
+      </if>
+      <if test="record.binsettime != null" >
+        binsettime = #{record.binsettime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update boss
+    set bid = #{record.bid,jdbcType=INTEGER},
+      busername = #{record.busername,jdbcType=VARCHAR},
+      btouxiang = #{record.btouxiang,jdbcType=VARCHAR},
+      btel = #{record.btel,jdbcType=VARCHAR},
+      bphone = #{record.bphone,jdbcType=VARCHAR},
+      bqq = #{record.bqq,jdbcType=VARCHAR},
+      bemail = #{record.bemail,jdbcType=VARCHAR},
+      bweibo = #{record.bweibo,jdbcType=VARCHAR},
+      bwechat = #{record.bwechat,jdbcType=VARCHAR},
+      bpassword = #{record.bpassword,jdbcType=VARCHAR},
+      brealname = #{record.brealname,jdbcType=VARCHAR},
+      bidcard = #{record.bidcard,jdbcType=VARCHAR},
+      bcontact = #{record.bcontact,jdbcType=VARCHAR},
+      bsex = #{record.bsex,jdbcType=VARCHAR},
+      baddress = #{record.baddress,jdbcType=VARCHAR},
+      bsign = #{record.bsign,jdbcType=VARCHAR},
+      bcancel = #{record.bcancel,jdbcType=INTEGER},
+      bcredit = #{record.bcredit,jdbcType=VARCHAR},
+      breport = #{record.breport,jdbcType=VARCHAR},
+      binsettime = #{record.binsettime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Boss" >
+    update boss
+    <set >
+      <if test="busername != null" >
+        busername = #{busername,jdbcType=VARCHAR},
+      </if>
+      <if test="btouxiang != null" >
+        btouxiang = #{btouxiang,jdbcType=VARCHAR},
+      </if>
+      <if test="btel != null" >
+        btel = #{btel,jdbcType=VARCHAR},
+      </if>
+      <if test="bphone != null" >
+        bphone = #{bphone,jdbcType=VARCHAR},
+      </if>
+      <if test="bqq != null" >
+        bqq = #{bqq,jdbcType=VARCHAR},
+      </if>
+      <if test="bemail != null" >
+        bemail = #{bemail,jdbcType=VARCHAR},
+      </if>
+      <if test="bweibo != null" >
+        bweibo = #{bweibo,jdbcType=VARCHAR},
+      </if>
+      <if test="bwechat != null" >
+        bwechat = #{bwechat,jdbcType=VARCHAR},
+      </if>
+      <if test="bpassword != null" >
+        bpassword = #{bpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="brealname != null" >
+        brealname = #{brealname,jdbcType=VARCHAR},
+      </if>
+      <if test="bidcard != null" >
+        bidcard = #{bidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="bcontact != null" >
+        bcontact = #{bcontact,jdbcType=VARCHAR},
+      </if>
+      <if test="bsex != null" >
+        bsex = #{bsex,jdbcType=VARCHAR},
+      </if>
+      <if test="baddress != null" >
+        baddress = #{baddress,jdbcType=VARCHAR},
+      </if>
+      <if test="bsign != null" >
+        bsign = #{bsign,jdbcType=VARCHAR},
+      </if>
+      <if test="bcancel != null" >
+        bcancel = #{bcancel,jdbcType=INTEGER},
+      </if>
+      <if test="bcredit != null" >
+        bcredit = #{bcredit,jdbcType=VARCHAR},
+      </if>
+      <if test="breport != null" >
+        breport = #{breport,jdbcType=VARCHAR},
+      </if>
+      <if test="binsettime != null" >
+        binsettime = #{binsettime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where bid = #{bid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Boss" >
+    update boss
+    set busername = #{busername,jdbcType=VARCHAR},
+      btouxiang = #{btouxiang,jdbcType=VARCHAR},
+      btel = #{btel,jdbcType=VARCHAR},
+      bphone = #{bphone,jdbcType=VARCHAR},
+      bqq = #{bqq,jdbcType=VARCHAR},
+      bemail = #{bemail,jdbcType=VARCHAR},
+      bweibo = #{bweibo,jdbcType=VARCHAR},
+      bwechat = #{bwechat,jdbcType=VARCHAR},
+      bpassword = #{bpassword,jdbcType=VARCHAR},
+      brealname = #{brealname,jdbcType=VARCHAR},
+      bidcard = #{bidcard,jdbcType=VARCHAR},
+      bcontact = #{bcontact,jdbcType=VARCHAR},
+      bsex = #{bsex,jdbcType=VARCHAR},
+      baddress = #{baddress,jdbcType=VARCHAR},
+      bsign = #{bsign,jdbcType=VARCHAR},
+      bcancel = #{bcancel,jdbcType=INTEGER},
+      bcredit = #{bcredit,jdbcType=VARCHAR},
+      breport = #{breport,jdbcType=VARCHAR},
+      binsettime = #{binsettime,jdbcType=TIMESTAMP}
+    where bid = #{bid,jdbcType=INTEGER}
+  </update>
+</mapper>

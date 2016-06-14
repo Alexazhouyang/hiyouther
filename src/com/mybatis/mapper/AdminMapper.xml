@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.AdminMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Admin" >
+    <id column="adid" property="adid" jdbcType="INTEGER" />
+    <result column="adpassword" property="adpassword" jdbcType="VARCHAR" />
+    <result column="adaccount" property="adaccount" jdbcType="VARCHAR" />
+    <result column="adquanx" property="adquanx" jdbcType="VARCHAR" />
+    <result column="adname" property="adname" jdbcType="VARCHAR" />
+  </resultMap>
+   <resultMap id="BaseResultMap2" type="com.mybatis.entity.Answer" >
+    <id column="anid" property="anid" jdbcType="INTEGER" />
+    <result column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="antime" property="antime" jdbcType="TIMESTAMP" />
+    <result column="listenerId" property="listenerid" jdbcType="INTEGER" />
+    <result column="speakerId" property="speakerid" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="listener" property="listener" jdbcType="VARCHAR" />
+    <result column="speaker" property="speaker" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMap1" type="com.mybatis.entity.Boss" >
+    <id column="bid" property="bid" jdbcType="INTEGER" />
+    <result column="busername" property="busername" jdbcType="VARCHAR" />
+    <result column="btouxiang" property="btouxiang" jdbcType="VARCHAR" />
+    <result column="btel" property="btel" jdbcType="VARCHAR" />
+    <result column="bphone" property="bphone" jdbcType="VARCHAR" />
+    <result column="bqq" property="bqq" jdbcType="VARCHAR" />
+    <result column="bemail" property="bemail" jdbcType="VARCHAR" />
+    <result column="bweibo" property="bweibo" jdbcType="VARCHAR" />
+    <result column="bwechat" property="bwechat" jdbcType="VARCHAR" />
+    <result column="bpassword" property="bpassword" jdbcType="VARCHAR" />
+    <result column="brealname" property="brealname" jdbcType="VARCHAR" />
+    <result column="bidcard" property="bidcard" jdbcType="VARCHAR" />
+    <result column="bcontact" property="bcontact" jdbcType="VARCHAR" />
+    <result column="bsex" property="bsex" jdbcType="VARCHAR" />
+    <result column="baddress" property="baddress" jdbcType="VARCHAR" />
+    <result column="bsign" property="bsign" jdbcType="VARCHAR" />
+    <result column="bcancel" property="bcancel" jdbcType="INTEGER" />
+    <result column="bcredit" property="bcredit" jdbcType="VARCHAR" />
+    <result column="breport" property="breport" jdbcType="VARCHAR" />
+    <result column="binsettime" property="binsettime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="BaseResultMap3" type="com.mybatis.entity.Comment" >
+    <id column="cid" property="cid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    <result column="rid" property="rid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    <result column="mid" property="mid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    <result column="ctitle" property="ctitle" jdbcType="VARCHAR" />
+    <result column="ctype" property="ctype" jdbcType="VARCHAR" />
+    <result column="ctime" property="ctime" jdbcType="TIMESTAMP" />
+    <result column="score" property="score" jdbcType="VARCHAR" />
+    <result column="cancel" property="cancel" jdbcType="INTEGER"/>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    adid, adpassword, adaccount, adquanx, adname
+  </sql>
+  
+     <!-- forvoid -->
+  <select id="selectByAdaccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where adaccount = #{adaccount}
+  </select>
+   <select id="selectByAllAnswer" resultMap="BaseResultMap2"  >
+    select * from answer  ORDER BY anid desc limit ${page*rows},${rows}
+  </select>
+  <select id="selectByAllComment" resultMap="BaseResultMap3" >
+   select * from comment where ctype=${type}   ORDER BY cid desc limit ${page*rows},${rows}
+  </select>
+<!--   total-->  
+ <select id="BossTotal" resultType="java.lang.Integer" >
+   select count(*) from boss;
+  </select>
+  <select id="MemberTotal" resultType="java.lang.Integer" >
+   select count(*) from member;
+  </select>
+  <select id="AnswerTotal" resultType="java.lang.Integer" >
+   select count(*) from answer;
+  </select>
+  <select id="CommentTotal" resultType="java.lang.Integer" >
+   select count(*) from comment;
+  </select>
+  <select id="ApplyTotal" resultType="java.lang.Integer" >
+   select count(*) from apply;
+  </select>
+  <select id="HostelTotal" resultType="java.lang.Integer" >
+   select count(*) from hostel;
+  </select> 
+  
+  <select id="selectAllBoss" resultMap="BaseResultMap1" >
+    select 
+    *
+    from boss
+    
+  </select>
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mybatis.entity.AdminExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from admin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where adid = #{adid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from admin
+    where adid = #{adid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.AdminExample" >
+    delete from admin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Admin" useGeneratedKeys="true" keyProperty="adid">
+    insert into admin (adid, adpassword, adaccount, 
+      adquanx, adname)
+    values (#{adid,jdbcType=INTEGER}, #{adpassword,jdbcType=VARCHAR}, #{adaccount,jdbcType=VARCHAR}, 
+      #{adquanx,jdbcType=VARCHAR}, #{adname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Admin" useGeneratedKeys="true" keyProperty="adid">
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="adid != null" >
+        adid,
+      </if>
+      <if test="adpassword != null" >
+        adpassword,
+      </if>
+      <if test="adaccount != null" >
+        adaccount,
+      </if>
+      <if test="adquanx != null" >
+        adquanx,
+      </if>
+      <if test="adname != null" >
+        adname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="adid != null" >
+        #{adid,jdbcType=INTEGER},
+      </if>
+      <if test="adpassword != null" >
+        #{adpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adaccount != null" >
+        #{adaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="adquanx != null" >
+        #{adquanx,jdbcType=VARCHAR},
+      </if>
+      <if test="adname != null" >
+        #{adname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mybatis.entity.AdminExample" resultType="java.lang.Integer" >
+    select count(*) from admin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update admin
+    <set >
+      <if test="record.adid != null" >
+        adid = #{record.adid,jdbcType=INTEGER},
+      </if>
+      <if test="record.adpassword != null" >
+        adpassword = #{record.adpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adaccount != null" >
+        adaccount = #{record.adaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adquanx != null" >
+        adquanx = #{record.adquanx,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adname != null" >
+        adname = #{record.adname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update admin
+    set adid = #{record.adid,jdbcType=INTEGER},
+      adpassword = #{record.adpassword,jdbcType=VARCHAR},
+      adaccount = #{record.adaccount,jdbcType=VARCHAR},
+      adquanx = #{record.adquanx,jdbcType=VARCHAR},
+      adname = #{record.adname,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Admin" >
+    update admin
+    <set >
+      <if test="adpassword != null" >
+        adpassword = #{adpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="adaccount != null" >
+        adaccount = #{adaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="adquanx != null" >
+        adquanx = #{adquanx,jdbcType=VARCHAR},
+      </if>
+      <if test="adname != null" >
+        adname = #{adname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where adid = #{adid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Admin" >
+    update admin
+    set adpassword = #{adpassword,jdbcType=VARCHAR},
+      adaccount = #{adaccount,jdbcType=VARCHAR},
+      adquanx = #{adquanx,jdbcType=VARCHAR},
+      adname = #{adname,jdbcType=VARCHAR}
+    where adid = #{adid,jdbcType=INTEGER}
+  </update>
+</mapper>

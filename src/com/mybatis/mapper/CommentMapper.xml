@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.CommentMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Comment" >
+    <id column="cid" property="cid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    <result column="rid" property="rid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    <result column="mid" property="mid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    <result column="ctitle" property="ctitle" jdbcType="VARCHAR" />
+    <result column="ctype" property="ctype" jdbcType="VARCHAR" />
+    <result column="ctime" property="ctime" jdbcType="TIMESTAMP" />
+    <result column="score" property="score" jdbcType="VARCHAR" />
+    <result column="cancel" property="cancel" jdbcType="INTEGER"/>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.mybatis.entity.Comment" extends="BaseResultMap" >
+    <result column="ccontent" property="ccontent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    cid, rid, mid, ctitle, ctype, ctime, score, cancel
+  </sql>
+  <sql id="Blob_Column_List" >
+    ccontent
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.CommentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from comment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+   <select id="getLastId" resultType="java.lang.Integer" >
+    select cid from comment ORDER BY cid desc limit 1
+  </select>
+   <select id="countByH" parameterType="com.mybatis.entity.CommentExample" resultType="java.lang.Integer" >
+    select count(*) from comment where ctype=${type} and comment.rid=ANY(SELECT recruit.rid from recruit where hid=${hid})  
+    and cancel=0
+  </select>
+   <select id="countByBid" parameterType="com.mybatis.entity.CommentExample" resultType="java.lang.Integer" >
+    select count(*) from comment where ctype=${type} and comment.rid=ANY(SELECT recruit.rid from recruit where hid=ANY(select hid from hostel where bid=#{bid}))  
+    and cancel=0
+  </select>
+     <select id="countByMid" parameterType="com.mybatis.entity.CommentExample" resultType="java.lang.Integer" >
+    select count(*) from comment where ctype=${type} and mid=${mid} and cancel=0
+  </select>
+   <select id="countByAVG"  resultType="java.lang.String" >
+    SELECT ROUND(AVG(score),0) FROM comment  WHERE rid=${rid}
+  </select>
+    <select id="countByR" parameterType="com.mybatis.entity.CommentExample" resultType="java.lang.Integer" >
+    select count(*) from comment where ctype=${type} and rid=${rid} and cancel=0
+  </select>
+  <select id="selectByM" resultMap="ResultMapWithBLOBs" >
+   select * from comment where ctype=${type} and mid=${mid} and cancel=0 ORDER BY cid desc limit ${page*rows},${rows}
+  </select>
+  <select id="ifBoss"   resultType="java.lang.Integer" >
+  select count(*) from hostel where hid=ANY( select hid from recruit where rid=ANY(select rid from comment where cid=#{cid})) and bid=#{bid};
+  </select>
+    <select id="selectByB" resultMap="ResultMapWithBLOBs" >
+   select * from comment where ctype=${type} and rid=ANY(select rid from recruit where hid=ANY(select hid from hostel where bid=#{bid})) and cancel=0 ORDER BY cid desc limit ${page*rows},${rows}
+  </select>
+  <select id="selectByR" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.CommentExample" >
+    select * from comment where ctype=${type} and rid=${rid}
+    and cancel=0 ORDER BY cid desc LIMIT ${pagesize*page},${pagesize}
+  </select>
+   <select id="selectByH" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.CommentExample" >
+    select * from comment where 
+    and ctype=${type} and comment.rid=ANY(SELECT recruit.rid from recruit where hid=${hid}) 
+    and cancel=0 ORDER BY cid desc LIMIT ${pagesize*page}, ${pagesize}
+  </select>
+   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from comment
+    where cid = #{cid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from comment
+    where cid = #{cid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.CommentExample" >
+    delete from comment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Comment" >
+    insert into comment (cid, rid, mid, 
+      ctitle, ctype, ctime, 
+      score, cancel, ccontent
+      )
+    values (#{cid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER}, #{mid,jdbcType=INTEGER}, 
+      #{ctitle,jdbcType=VARCHAR}, #{ctype,jdbcType=VARCHAR}, #{ctime,jdbcType=TIMESTAMP}, 
+      #{score,jdbcType=VARCHAR}, #{cancel,jdbcType=INTEGER}, #{ccontent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Comment" >
+    insert into comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="rid != null" >
+        rid,
+      </if>
+      <if test="mid != null" >
+        mid,
+      </if>
+      <if test="ctitle != null" >
+        ctitle,
+      </if>
+      <if test="ctype != null" >
+        ctype,
+      </if>
+      <if test="ctime != null" >
+        ctime,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="cancel != null" >
+        cancel,
+      </if>
+      <if test="ccontent != null" >
+        ccontent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="rid != null" >
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="mid != null" >
+        #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="ctitle != null" >
+        #{ctitle,jdbcType=VARCHAR},
+      </if>
+      <if test="ctype != null" >
+        #{ctype,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null" >
+        #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=VARCHAR},
+      </if>
+      <if test="cancel != null" >
+        #{cancel,jdbcType=INTEGER},
+      </if>
+      <if test="ccontent != null" >
+        #{ccontent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectByschedule" resultType="java.lang.String" >
+   SELECT aschedule FROM apply WHERE mid=#{mid} and rid=#{rid}
+  </select>
+  <select id="countByExample" parameterType="com.mybatis.entity.CommentExample" resultType="java.lang.Integer" >
+    select count(*) from comment WHERE mid=#{mid}
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update comment
+    <set >
+      <if test="record.cid != null" >
+        cid = #{record.cid,jdbcType=INTEGER},
+      </if>
+      <if test="record.rid != null" >
+        rid = #{record.rid,jdbcType=INTEGER},
+      </if>
+      <if test="record.mid != null" >
+        mid = #{record.mid,jdbcType=INTEGER},
+      </if>
+      <if test="record.ctitle != null" >
+        ctitle = #{record.ctitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ctype != null" >
+        ctype = #{record.ctype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ctime != null" >
+        ctime = #{record.ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.score != null" >
+        score = #{record.score,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cancel != null" >
+        cancel = #{record.cancel,jdbcType=INTEGER},
+      </if>
+      <if test="record.ccontent != null" >
+        ccontent = #{record.ccontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update comment
+    set cid = #{record.cid,jdbcType=INTEGER},
+      rid = #{record.rid,jdbcType=INTEGER},
+      mid = #{record.mid,jdbcType=INTEGER},
+      ctitle = #{record.ctitle,jdbcType=VARCHAR},
+      ctype = #{record.ctype,jdbcType=VARCHAR},
+      ctime = #{record.ctime,jdbcType=TIMESTAMP},
+      score = #{record.score,jdbcType=VARCHAR},
+      cancel = #{record.cancel,jdbcType=INTEGER},
+      ccontent = #{record.ccontent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update comment
+    set cid = #{record.cid,jdbcType=INTEGER},
+      rid = #{record.rid,jdbcType=INTEGER},
+      mid = #{record.mid,jdbcType=INTEGER},
+      ctitle = #{record.ctitle,jdbcType=VARCHAR},
+      ctype = #{record.ctype,jdbcType=VARCHAR},
+      ctime = #{record.ctime,jdbcType=TIMESTAMP},
+      score = #{record.score,jdbcType=VARCHAR},
+      cancel = #{record.cancel,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Comment" >
+    update comment
+    <set >
+      <if test="rid != null" >
+        rid = #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="mid != null" >
+        mid = #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="ctitle != null" >
+        ctitle = #{ctitle,jdbcType=VARCHAR},
+      </if>
+      <if test="ctype != null" >
+        ctype = #{ctype,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null" >
+        ctime = #{ctime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=VARCHAR},
+      </if>
+      <if test="cancel != null" >
+        cancel = #{cancel,jdbcType=INTEGER},
+      </if>
+      <if test="ccontent != null" >
+        ccontent = #{ccontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where cid = #{cid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mybatis.entity.Comment" >
+    update comment
+    set rid = #{rid,jdbcType=INTEGER},
+      mid = #{mid,jdbcType=INTEGER},
+      ctitle = #{ctitle,jdbcType=VARCHAR},
+      ctype = #{ctype,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      score = #{score,jdbcType=VARCHAR},
+      cancel = #{cancel,jdbcType=INTEGER},
+      ccontent = #{ccontent,jdbcType=LONGVARCHAR}
+    where cid = #{cid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Comment" >
+    update comment
+    set rid = #{rid,jdbcType=INTEGER},
+      mid = #{mid,jdbcType=INTEGER},
+      ctitle = #{ctitle,jdbcType=VARCHAR},
+      ctype = #{ctype,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=TIMESTAMP},
+      score = #{score,jdbcType=VARCHAR},
+      cancel = #{cancel,jdbcType=INTEGER}
+    where cid = #{cid,jdbcType=INTEGER}
+  </update>
+</mapper>

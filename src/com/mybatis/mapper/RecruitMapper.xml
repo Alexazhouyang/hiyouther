@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.RecruitMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Recruit" >
+    <id column="rid" property="rid" jdbcType="INTEGER" />
+    <result column="hid" property="hid" jdbcType="INTEGER" />
+    <result column="rcompetence" property="rcompetence" jdbcType="VARCHAR" />
+    <result column="rworktime" property="rworktime" jdbcType="VARCHAR" />
+    <result column="rsctime" property="rsctime" jdbcType="DATE"  javaType="java.util.Date"/>
+    <result column="rmonth" property="rmonth" jdbcType="DATE"  javaType="java.util.Date"/>
+    <result column="rnumbers" property="rnumbers" jdbcType="VARCHAR" />
+    <result column="rcancel" property="rcancel" jdbcType="INTEGER" />
+    <result column="rname" property="rname" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.mybatis.entity.RecruitWithBLOBs" extends="BaseResultMap" >
+    <result column="rtask" property="rtask" jdbcType="LONGVARCHAR" />
+    <result column="rsynopsis" property="rsynopsis" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    rid, hid, rcompetence, rworktime, rsctime, rmonth, rnumbers, rcancel, rname
+  </sql>
+  <sql id="Blob_Column_List" >
+    rtask, rsynopsis
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.RecruitExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from recruit
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+<select id="selectLast" resultType="java.lang.Integer" >
+  select rid from recruit ORDER BY rid desc limit 1
+</select>
+<select id="selectByhistory" resultMap="ResultMapWithBLOBs" >
+select * from recruit where recruit.hid=#{hid} ORDER BY rid desc limit ${page*rows},${rows}
+</select>
+<select id="countByhistory" resultType="java.lang.Integer" >
+ select count(*) from recruit where recruit.hid=#{hid} 
+</select>
+<select id="countBycomment" resultType="java.lang.Integer" >
+select count(*) from comment where  rid=#{rid} and ctype=#{type} and cancel=0
+</select>
+<select id="selectByHidForLister" resultType="java.lang.Integer" >
+select * from comment where  hid=#{hid}  limit 1
+</select>
+<select id="countByAll" resultType="java.lang.Integer" >
+  select count(*) from recruit where  rcancel=0 and  recruit.hid=ANY(select hid from hostel where 
+  <if test="arid !=null ">  
+  arid=#{arid} and 
+  </if> 
+  <if test="name != null "> 
+  haddress like '%${name}%' and
+  </if>
+  pauthentic!=-1) 
+  <if test="month !=null and sctime !=null ">  
+and '${month}' >= rmonth and rsctime >= '${sctime}'
+  </if>
+</select>
+<select id="selectByHid" resultType="java.lang.Integer" >
+select rid from recruit where hid=#{hid} ORDER BY rid desc
+</select>
+<select id="countByType" resultType="java.lang.Integer" >
+  select count(*) from recruit where rcancel=0 and  recruit.hid=ANY(select hid from hostel where 
+  <if test="arid !=null ">  
+  arid=#{arid} and 
+  </if> 
+  <if test="name != null "> 
+  haddress like '%${name}%' and
+  </if>
+  pauthentic = '1' or pauthentic = '5') 
+  <if test="month !=null and sctime !=null ">  
+and '${month}' >= rmonth and rsctime >= '${sctime}'
+  </if>
+</select>
+<select id="selectByAll" resultMap="ResultMapWithBLOBs" >
+   select * from recruit where recruit.hid=ANY(select hid from hostel where 
+  <if test="arid !=null ">  
+  arid=#{arid} and 
+  </if> 
+  <if test="name != null "> 
+  haddress like '%${name}%' and
+  </if>
+  pauthentic !=-1) 
+  <if test="month !=null and sctime !=null ">  
+and '${month}' >= rmonth and rsctime >= '${sctime}'
+  </if>
+  and  rcancel=0 ORDER BY rworktime desc LIMIT ${pagesize*page},${pagesize}
+</select>
+<select id="selectByType" resultMap="ResultMapWithBLOBs" >
+  select * from recruit  where 
+  recruit.hid=ANY(select hid from hostel where 
+  <if test="arid !=null ">  
+  arid=#{arid} and
+  </if> 
+  <if test="name != null "> 
+  haddress like '%${name}%' and
+  </if>
+  pauthentic = '1' or pauthentic = '5') 
+  <if test="month !=null and sctime !=null ">  
+and '${month}' >= rmonth and rsctime >= '${sctime}'
+  </if>
+  and  rcancel=0  ORDER BY rworktime desc LIMIT ${pagesize*page},${pagesize}
+</select>
+ <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from recruit
+    where rid = #{rid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from recruit
+    where rid = #{rid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.RecruitExample" >
+    delete from recruit where hid = #{hid}
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.RecruitWithBLOBs" >
+    insert into recruit (rid, hid, rcompetence, 
+      rworktime, rsctime, rmonth, 
+      rnumbers, rcancel, rname, 
+      rtask, rsynopsis)
+    values (#{rid,jdbcType=INTEGER}, #{hid,jdbcType=INTEGER}, #{rcompetence,jdbcType=VARCHAR}, 
+      #{rworktime,jdbcType=VARCHAR}, #{rsctime,jdbcType=DATE}, #{rmonth,jdbcType=DATE}, 
+      #{rnumbers,jdbcType=VARCHAR}, #{rcancel,jdbcType=INTEGER}, #{rname,jdbcType=VARCHAR}, 
+      #{rtask,jdbcType=LONGVARCHAR}, #{rsynopsis,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.RecruitWithBLOBs" >
+    insert into recruit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="rid != null" >
+        rid,
+      </if>
+      <if test="hid != null" >
+        hid,
+      </if>
+      <if test="rcompetence != null" >
+        rcompetence,
+      </if>
+      <if test="rworktime != null" >
+        rworktime,
+      </if>
+      <if test="rsctime != null" >
+        rsctime,
+      </if>
+      <if test="rmonth != null" >
+        rmonth,
+      </if>
+      <if test="rnumbers != null" >
+        rnumbers,
+      </if>
+      <if test="rcancel != null" >
+        rcancel,
+      </if>
+      <if test="rname != null" >
+        rname,
+      </if>
+      <if test="rtask != null" >
+        rtask,
+      </if>
+      <if test="rsynopsis != null" >
+        rsynopsis,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="rid != null" >
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="hid != null" >
+        #{hid,jdbcType=INTEGER},
+      </if>
+      <if test="rcompetence != null" >
+        #{rcompetence,jdbcType=VARCHAR},
+      </if>
+      <if test="rworktime != null" >
+        #{rworktime,jdbcType=VARCHAR},
+      </if>
+      <if test="rsctime != null" >
+        #{rsctime,jdbcType=DATE},
+      </if>
+      <if test="rmonth != null" >
+        #{rmonth,jdbcType=DATE},
+      </if>
+      <if test="rnumbers != null" >
+        #{rnumbers,jdbcType=VARCHAR},
+      </if>
+      <if test="rcancel != null" >
+        #{rcancel,jdbcType=INTEGER},
+      </if>
+      <if test="rname != null" >
+        #{rname,jdbcType=VARCHAR},
+      </if>
+      <if test="rtask != null" >
+        #{rtask,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="rsynopsis != null" >
+        #{rsynopsis,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mybatis.entity.RecruitExample" resultType="java.lang.Integer" >
+    select count(*) from recruit where rid=#{rid}
+  </select>
+  <select id="countByAVG" parameterType="com.mybatis.entity.RecruitExample" resultType="java.lang.Integer" >
+    SELECT ROUND(AVG(score),0) FROM COMMENT WHERE where rid=#{rid}
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update recruit
+    <set >
+      <if test="record.rid != null" >
+        rid = #{record.rid,jdbcType=INTEGER},
+      </if>
+      <if test="record.hid != null" >
+        hid = #{record.hid,jdbcType=INTEGER},
+      </if>
+      <if test="record.rcompetence != null" >
+        rcompetence = #{record.rcompetence,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rworktime != null" >
+        rworktime = #{record.rworktime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rsctime != null" >
+        rsctime = #{record.rsctime,jdbcType=DATE},
+      </if>
+      <if test="record.rmonth != null" >
+        rmonth = #{record.rmonth,jdbcType=DATE},
+      </if>
+      <if test="record.rnumbers != null" >
+        rnumbers = #{record.rnumbers,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rcancel != null" >
+        rcancel = #{record.rcancel,jdbcType=INTEGER},
+      </if>
+      <if test="record.rname != null" >
+        rname = #{record.rname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rtask != null" >
+        rtask = #{record.rtask,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.rsynopsis != null" >
+        rsynopsis = #{record.rsynopsis,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update recruit
+    set rid = #{record.rid,jdbcType=INTEGER},
+      hid = #{record.hid,jdbcType=INTEGER},
+      rcompetence = #{record.rcompetence,jdbcType=VARCHAR},
+      rworktime = #{record.rworktime,jdbcType=VARCHAR},
+      rsctime = #{record.rsctime,jdbcType=DATE},
+      rmonth = #{record.rmonth,jdbcType=DATE},
+      rnumbers = #{record.rnumbers,jdbcType=VARCHAR},
+      rcancel = #{record.rcancel,jdbcType=INTEGER},
+      rname = #{record.rname,jdbcType=VARCHAR},
+      rtask = #{record.rtask,jdbcType=LONGVARCHAR},
+      rsynopsis = #{record.rsynopsis,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update recruit
+    set rid = #{record.rid,jdbcType=INTEGER},
+      hid = #{record.hid,jdbcType=INTEGER},
+      rcompetence = #{record.rcompetence,jdbcType=VARCHAR},
+      rworktime = #{record.rworktime,jdbcType=VARCHAR},
+      rsctime = #{record.rsctime,jdbcType=DATE},
+      rmonth = #{record.rmonth,jdbcType=DATE},
+      rnumbers = #{record.rnumbers,jdbcType=VARCHAR},
+      rcancel = #{record.rcancel,jdbcType=INTEGER},
+      rname = #{record.rname,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.RecruitWithBLOBs" >
+    update recruit
+    <set >
+      <if test="hid != null" >
+        hid = #{hid,jdbcType=INTEGER},
+      </if>
+      <if test="rcompetence != null" >
+        rcompetence = #{rcompetence,jdbcType=VARCHAR},
+      </if>
+      <if test="rworktime != null" >
+        rworktime = #{rworktime,jdbcType=VARCHAR},
+      </if>
+      <if test="rsctime != null" >
+        rsctime = #{rsctime,jdbcType=DATE},
+      </if>
+      <if test="rmonth != null" >
+        rmonth = #{rmonth,jdbcType=DATE},
+      </if>
+      <if test="rnumbers != null" >
+        rnumbers = #{rnumbers,jdbcType=VARCHAR},
+      </if>
+      <if test="rcancel != null" >
+        rcancel = #{rcancel,jdbcType=INTEGER},
+      </if>
+      <if test="rname != null" >
+        rname = #{rname,jdbcType=VARCHAR},
+      </if>
+      <if test="rtask != null" >
+        rtask = #{rtask,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="rsynopsis != null" >
+        rsynopsis = #{rsynopsis,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where rid = #{rid,jdbcType=INTEGER} 
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mybatis.entity.RecruitWithBLOBs" >
+    update recruit
+    set hid = #{hid,jdbcType=INTEGER},
+      rcompetence = #{rcompetence,jdbcType=VARCHAR},
+      rworktime = #{rworktime,jdbcType=VARCHAR},
+      rsctime = #{rsctime,jdbcType=DATE},
+      rmonth = #{rmonth,jdbcType=DATE},
+      rnumbers = #{rnumbers,jdbcType=VARCHAR},
+      rcancel = #{rcancel,jdbcType=INTEGER},
+      rname = #{rname,jdbcType=VARCHAR},
+      rtask = #{rtask,jdbcType=LONGVARCHAR},
+      rsynopsis = #{rsynopsis,jdbcType=LONGVARCHAR}
+    where rid = #{rid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Recruit" >
+    update recruit
+    set hid = #{hid,jdbcType=INTEGER},
+      rcompetence = #{rcompetence,jdbcType=VARCHAR},
+      rworktime = #{rworktime,jdbcType=VARCHAR},
+      rsctime = #{rsctime,jdbcType=DATE},
+      rmonth = #{rmonth,jdbcType=DATE},
+      rnumbers = #{rnumbers,jdbcType=VARCHAR},
+      rcancel = #{rcancel,jdbcType=INTEGER},
+      rname = #{rname,jdbcType=VARCHAR}
+    where rid = #{rid,jdbcType=INTEGER}
+  </update>
+</mapper>

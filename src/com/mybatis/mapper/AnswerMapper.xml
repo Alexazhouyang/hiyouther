@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.AnswerMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Answer" >
+    <id column="anid" property="anid" jdbcType="INTEGER" />
+    <result column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="antime" property="antime" jdbcType="TIMESTAMP" />
+    <result column="listenerId" property="listenerid" jdbcType="INTEGER" />
+    <result column="speakerId" property="speakerid" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="listener" property="listener" jdbcType="VARCHAR" />
+    <result column="speaker" property="speaker" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.mybatis.entity.Answer" extends="BaseResultMap" >
+    <result column="ccontent" property="ccontent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    anid, cid, antime, listenerId, speakerId, type, listener, speaker
+  </sql>
+  <sql id="Blob_Column_List" >
+    ccontent
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.mybatis.entity.AnswerExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from answer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mybatis.entity.AnswerExample" >
+    select * from answer where cid=#{cid} ORDER BY anid desc 
+  </select>
+    <select id="selectByCid" resultMap="BaseResultMap" parameterType="com.mybatis.entity.AnswerExample" >
+    select * from answer where cid=#{cid} ORDER BY anid desc LIMIT ${pagesize*page},${pagesize}
+  </select>
+  <select id="countByExample"  resultType="java.lang.Integer"  >
+    select count(*) from answer where cid=#{cid}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from answer
+    where anid = #{anid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from answer
+    where anid = #{anid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.AnswerExample" >
+    delete from answer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Answer" >
+    insert into answer (anid, cid, antime, 
+      listenerId, speakerId, type, 
+      listener, speaker, ccontent
+      )
+    values (#{anid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, #{antime,jdbcType=TIMESTAMP}, 
+      #{listenerid,jdbcType=INTEGER}, #{speakerid,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+      #{listener,jdbcType=VARCHAR}, #{speaker,jdbcType=VARCHAR}, #{ccontent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Answer" >
+    insert into answer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="anid != null" >
+        anid,
+      </if>
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="antime != null" >
+        antime,
+      </if>
+      <if test="listenerid != null" >
+        listenerId,
+      </if>
+      <if test="speakerid != null" >
+        speakerId,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="listener != null" >
+        listener,
+      </if>
+      <if test="speaker != null" >
+        speaker,
+      </if>
+      <if test="ccontent != null" >
+        ccontent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="anid != null" >
+        #{anid,jdbcType=INTEGER},
+      </if>
+      <if test="cid != null" >
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="antime != null" >
+        #{antime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="listenerid != null" >
+        #{listenerid,jdbcType=INTEGER},
+      </if>
+      <if test="speakerid != null" >
+        #{speakerid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="listener != null" >
+        #{listener,jdbcType=VARCHAR},
+      </if>
+      <if test="speaker != null" >
+        #{speaker,jdbcType=VARCHAR},
+      </if>
+      <if test="ccontent != null" >
+        #{ccontent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update answer
+    <set >
+      <if test="record.anid != null" >
+        anid = #{record.anid,jdbcType=INTEGER},
+      </if>
+      <if test="record.cid != null" >
+        cid = #{record.cid,jdbcType=INTEGER},
+      </if>
+      <if test="record.antime != null" >
+        antime = #{record.antime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.listenerid != null" >
+        listenerId = #{record.listenerid,jdbcType=INTEGER},
+      </if>
+      <if test="record.speakerid != null" >
+        speakerId = #{record.speakerid,jdbcType=INTEGER},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.listener != null" >
+        listener = #{record.listener,jdbcType=VARCHAR},
+      </if>
+      <if test="record.speaker != null" >
+        speaker = #{record.speaker,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ccontent != null" >
+        ccontent = #{record.ccontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update answer
+    set anid = #{record.anid,jdbcType=INTEGER},
+      cid = #{record.cid,jdbcType=INTEGER},
+      antime = #{record.antime,jdbcType=TIMESTAMP},
+      listenerId = #{record.listenerid,jdbcType=INTEGER},
+      speakerId = #{record.speakerid,jdbcType=INTEGER},
+      type = #{record.type,jdbcType=VARCHAR},
+      listener = #{record.listener,jdbcType=VARCHAR},
+      speaker = #{record.speaker,jdbcType=VARCHAR},
+      ccontent = #{record.ccontent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update answer
+    set anid = #{record.anid,jdbcType=INTEGER},
+      cid = #{record.cid,jdbcType=INTEGER},
+      antime = #{record.antime,jdbcType=TIMESTAMP},
+      listenerId = #{record.listenerid,jdbcType=INTEGER},
+      speakerId = #{record.speakerid,jdbcType=INTEGER},
+      type = #{record.type,jdbcType=VARCHAR},
+      listener = #{record.listener,jdbcType=VARCHAR},
+      speaker = #{record.speaker,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Answer" >
+    update answer
+    <set >
+      <if test="cid != null" >
+        cid = #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="antime != null" >
+        antime = #{antime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="listenerid != null" >
+        listenerId = #{listenerid,jdbcType=INTEGER},
+      </if>
+      <if test="speakerid != null" >
+        speakerId = #{speakerid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="listener != null" >
+        listener = #{listener,jdbcType=VARCHAR},
+      </if>
+      <if test="speaker != null" >
+        speaker = #{speaker,jdbcType=VARCHAR},
+      </if>
+      <if test="ccontent != null" >
+        ccontent = #{ccontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where anid = #{anid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mybatis.entity.Answer" >
+    update answer
+    set cid = #{cid,jdbcType=INTEGER},
+      antime = #{antime,jdbcType=TIMESTAMP},
+      listenerId = #{listenerid,jdbcType=INTEGER},
+      speakerId = #{speakerid,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      listener = #{listener,jdbcType=VARCHAR},
+      speaker = #{speaker,jdbcType=VARCHAR},
+      ccontent = #{ccontent,jdbcType=LONGVARCHAR}
+    where anid = #{anid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Answer" >
+    update answer
+    set cid = #{cid,jdbcType=INTEGER},
+      antime = #{antime,jdbcType=TIMESTAMP},
+      listenerId = #{listenerid,jdbcType=INTEGER},
+      speakerId = #{speakerid,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      listener = #{listener,jdbcType=VARCHAR},
+      speaker = #{speaker,jdbcType=VARCHAR}
+    where anid = #{anid,jdbcType=INTEGER}
+  </update>
+</mapper>

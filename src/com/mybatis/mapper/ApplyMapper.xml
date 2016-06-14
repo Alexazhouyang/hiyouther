@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.ApplyMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Apply" >
+    <id column="aid" property="aid" jdbcType="INTEGER" />
+    <result column="mid" property="mid" jdbcType="INTEGER" />
+    <result column="rid" property="rid" jdbcType="INTEGER" />
+    <result column="aschedule" property="aschedule" jdbcType="VARCHAR" />
+    <result column="atime" property="atime" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+    <result column="arefuse" property="arefuse" jdbcType="VARCHAR" />
+    <result column="ainsertime" property="ainsertime" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    aid, mid, rid, aschedule, atime
+  </sql>
+    <select id="countByapply" resultType="java.lang.Integer">
+    select count(*) from apply  where mid=#{mid} and aschedule != 1010 and aschedule != 1011  and aschedule != 1111 and aschedule != 1110
+   <if test="state != null">
+      and ( aschedule = #{state}
+    <if test="state == 4000">
+    or aschedule = 3110 or aschedule = 3010
+    </if>
+    <if test="state == 3000">
+    or aschedule = 3100
+    </if>
+    )
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select * from apply  where mid=#{mid} and aschedule != 1010 and aschedule != 1011  and aschedule != 1111 and aschedule != 1110 
+   <if test="state != null">
+    and (aschedule = #{state}
+    <if test="state == 4000">
+    or aschedule = 3110 or aschedule = 3010
+    </if>
+    <if test="state == 3000">
+    or aschedule = 3100
+    </if>
+    )
+    </if>
+    order by aid desc  limit ${page*rows},${rows}
+  </select>
+  <select id="selectByRid" resultMap="BaseResultMap">
+    select * from apply  where rid=#{rid}  and aschedule != 1100 and aschedule != 1111 and aschedule != 1110 and aschedule != 1101
+    <if test="state != null">
+    and (aschedule = #{state}
+    <if test="state == 4000">
+    or aschedule = 3110 or aschedule = 3100
+    </if>
+    <if test="state == 3000">
+    or aschedule = 3010
+    </if>
+    )
+    </if>
+    order by aid desc 
+  </select>
+    <select id="countByHid" resultType="java.lang.Integer">
+    select count(*) from apply  where rid=ANY(select rid from recruit where hid = #{hid})  and aschedule != 1100 and aschedule != 1111 and aschedule != 1110 and aschedule != 1101
+    <if test="state != null">
+    and ( aschedule = #{state}
+    <if test="state == 4000">
+    or aschedule = 3110 or aschedule = 3100
+    </if>
+    <if test="state == 3000">
+    or aschedule = 3010
+    </if> 
+    )
+    </if>
+  </select>
+    <select id="ifApply" resultMap="BaseResultMap">
+    select * from apply  where mid=#{mid} and rid=#{rid}
+  </select>
+   <select id="countByRid" resultType="java.lang.Integer">
+    select count(*) from apply  where rid=#{rid} 
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from apply
+    where aid = #{aid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from apply
+    where aid = #{aid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.ApplyExample" >
+    delete from apply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Apply" >
+    insert into apply (aid, mid, rid, 
+      aschedule, atime)
+    values (#{aid,jdbcType=INTEGER}, #{mid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER}, 
+      #{aschedule,jdbcType=VARCHAR}, #{atime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Apply" >
+    insert into apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        aid,
+      </if>
+      <if test="mid != null" >
+        mid,
+      </if>
+      <if test="rid != null" >
+        rid,
+      </if>
+      <if test="aschedule != null" >
+        aschedule,
+      </if>
+      <if test="atime != null" >
+        atime,
+      </if>
+      <if test="arefuse != null" >
+        arefuse ,
+      </if>
+      <if test="ainsertime != null" >
+        ainsertime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="mid != null" >
+        #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="rid != null" >
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="aschedule != null" >
+        #{aschedule,jdbcType=VARCHAR},
+      </if>
+      <if test="atime != null" >
+        #{atime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arefuse != null" >
+        #{arefuse,jdbcType=VARCHAR},
+      </if>
+      <if test="ainsertime != null" >
+        #{ainsertime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mybatis.entity.ApplyExample" resultType="java.lang.Integer" >
+    select count(*) from apply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update apply
+    <set >
+      <if test="record.aid != null" >
+        aid = #{record.aid,jdbcType=INTEGER},
+      </if>
+      <if test="record.mid != null" >
+        mid = #{record.mid,jdbcType=INTEGER},
+      </if>
+      <if test="record.rid != null" >
+        rid = #{record.rid,jdbcType=INTEGER},
+      </if>
+      <if test="record.aschedule != null" >
+        aschedule = #{record.aschedule,jdbcType=VARCHAR},
+      </if>
+      <if test="record.atime != null" >
+        atime = #{record.atime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update apply
+    set aid = #{record.aid,jdbcType=INTEGER},
+      mid = #{record.mid,jdbcType=INTEGER},
+      rid = #{record.rid,jdbcType=INTEGER},
+      aschedule = #{record.aschedule,jdbcType=VARCHAR},
+      atime = #{record.atime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Apply" >
+    update apply
+    <set >
+      <if test="mid != null" >
+        mid = #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="rid != null" >
+        rid = #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="aschedule != null" >
+        aschedule = #{aschedule,jdbcType=VARCHAR},
+      </if>
+      <if test="atime != null" >
+        atime = #{atime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arefuse != null" >
+        arefuse = #{arefuse,jdbcType=VARCHAR},
+      </if>
+      <if test="ainsertime != null" >
+        ainsertime = #{ainsertime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where aid = #{aid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Apply" >
+    update apply
+    set mid = #{mid,jdbcType=INTEGER},
+      rid = #{rid,jdbcType=INTEGER},
+      aschedule = #{aschedule,jdbcType=VARCHAR},
+      atime = #{atime,jdbcType=TIMESTAMP}
+    where aid = #{aid,jdbcType=INTEGER}
+  </update>
+</mapper>

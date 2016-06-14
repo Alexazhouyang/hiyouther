@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.MemberMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Member" >
+    <id column="mid" property="mid" jdbcType="INTEGER" />
+    <result column="memname" property="memname" jdbcType="VARCHAR" />
+    <result column="mtouxiang" property="mtouxiang" jdbcType="VARCHAR" />
+    <result column="mtel" property="mtel" jdbcType="VARCHAR" />
+    <result column="mphone" property="mphone" jdbcType="VARCHAR" />
+    <result column="mqq" property="mqq" jdbcType="VARCHAR" />
+    <result column="memail" property="memail" jdbcType="VARCHAR" />
+    <result column="mweibo" property="mweibo" jdbcType="VARCHAR" />
+    <result column="mwechat" property="mwechat" jdbcType="VARCHAR" />
+    <result column="mpassword" property="mpassword" jdbcType="VARCHAR" />
+    <result column="mrealname" property="mrealname" jdbcType="VARCHAR" />
+    <result column="midcard" property="midcard" jdbcType="VARCHAR" />
+    <result column="mcontact" property="mcontact" jdbcType="VARCHAR" />
+    <result column="msex" property="msex" jdbcType="VARCHAR" />
+    <result column="maddress" property="maddress" jdbcType="VARCHAR" />
+    <result column="msign" property="msign" jdbcType="VARCHAR" />
+    <result column="mcancel" property="mcancel" jdbcType="VARCHAR" />
+    <result column="mcredit" property="mcredit" jdbcType="VARCHAR" />
+    <result column="mreport" property="mreport" jdbcType="VARCHAR" />
+    <result column="mresume" property="mresume" jdbcType="VARCHAR" />
+    <result column="minsettime" property="minsettime" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    mid, memname, mtouxiang, mtel, mphone, mqq, memail, mweibo, mwechat, mpassword, mrealname, 
+    midcard, mcontact, msex, maddress, msign, mcancel, mcredit, mreport, mresume, minsettime
+  </sql>
+     <!-- forvoid -->
+  <select id="selectByMphone" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where mphone = #{mphone}
+  </select>
+  <select id="selectAllConfirm" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where mcancel = #{mcancel}
+  </select>
+  
+  <select id="selectByEmail" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where memail = '${memail}'
+  </select>
+  <select id="selectByQQLink" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select *
+    from member
+    where mqq LIKE '${mqq}%'
+  </select>
+  <select id="selectByQQ" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where mqq = #{mqq}
+  </select>
+  <select id="selectByWeiBo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where mweibo = #{mweibo}
+  </select>
+  <select id="selectByWechat" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where mwechat = #{mwechat}
+  </select>
+  
+  
+  
+  
+  
+  <!-- /forvoid -->
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mybatis.entity.MemberExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from member
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where mid = #{mid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from member
+    where mid = #{mid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.MemberExample" >
+    delete from member
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Member" useGeneratedKeys="true" keyProperty="mid">
+    insert into member (mid, memname, mtouxiang, 
+      mtel, mphone, mqq, 
+      memail, mweibo, mwechat, 
+      mpassword, mrealname, midcard, 
+      mcontact, msex, maddress, 
+      msign, mcancel, mcredit, 
+      mreport, mresume, minsettime
+      )
+    values (#{mid,jdbcType=INTEGER}, #{memname,jdbcType=VARCHAR}, #{mtouxiang,jdbcType=VARCHAR}, 
+      #{mtel,jdbcType=VARCHAR}, #{mphone,jdbcType=VARCHAR}, #{mqq,jdbcType=VARCHAR}, 
+      #{memail,jdbcType=VARCHAR}, #{mweibo,jdbcType=VARCHAR}, #{mwechat,jdbcType=VARCHAR}, 
+      #{mpassword,jdbcType=VARCHAR}, #{mrealname,jdbcType=VARCHAR}, #{midcard,jdbcType=VARCHAR}, 
+      #{mcontact,jdbcType=VARCHAR}, #{msex,jdbcType=VARCHAR}, #{maddress,jdbcType=VARCHAR}, 
+      #{msign,jdbcType=VARCHAR}, #{mcancel,jdbcType=VARCHAR}, #{mcredit,jdbcType=VARCHAR}, 
+      #{mreport,jdbcType=VARCHAR}, #{mresume,jdbcType=VARCHAR}, #{minsettime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Member" useGeneratedKeys="true" keyProperty="mid">
+    insert into member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mid != null" >
+        mid,
+      </if>
+      <if test="memname != null" >
+        memname,
+      </if>
+      <if test="mtouxiang != null" >
+        mtouxiang,
+      </if>
+      <if test="mtel != null" >
+        mtel,
+      </if>
+      <if test="mphone != null" >
+        mphone,
+      </if>
+      <if test="mqq != null" >
+        mqq,
+      </if>
+      <if test="memail != null" >
+        memail,
+      </if>
+      <if test="mweibo != null" >
+        mweibo,
+      </if>
+      <if test="mwechat != null" >
+        mwechat,
+      </if>
+      <if test="mpassword != null" >
+        mpassword,
+      </if>
+      <if test="mrealname != null" >
+        mrealname,
+      </if>
+      <if test="midcard != null" >
+        midcard,
+      </if>
+      <if test="mcontact != null" >
+        mcontact,
+      </if>
+      <if test="msex != null" >
+        msex,
+      </if>
+      <if test="maddress != null" >
+        maddress,
+      </if>
+      <if test="msign != null" >
+        msign,
+      </if>
+      <if test="mcancel != null" >
+        mcancel,
+      </if>
+      <if test="mcredit != null" >
+        mcredit,
+      </if>
+      <if test="mreport != null" >
+        mreport,
+      </if>
+      <if test="mresume != null" >
+        mresume,
+      </if>
+      <if test="minsettime != null" >
+        minsettime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mid != null" >
+        #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="memname != null" >
+        #{memname,jdbcType=VARCHAR},
+      </if>
+      <if test="mtouxiang != null" >
+        #{mtouxiang,jdbcType=VARCHAR},
+      </if>
+      <if test="mtel != null" >
+        #{mtel,jdbcType=VARCHAR},
+      </if>
+      <if test="mphone != null" >
+        #{mphone,jdbcType=VARCHAR},
+      </if>
+      <if test="mqq != null" >
+        #{mqq,jdbcType=VARCHAR},
+      </if>
+      <if test="memail != null" >
+        #{memail,jdbcType=VARCHAR},
+      </if>
+      <if test="mweibo != null" >
+        #{mweibo,jdbcType=VARCHAR},
+      </if>
+      <if test="mwechat != null" >
+        #{mwechat,jdbcType=VARCHAR},
+      </if>
+      <if test="mpassword != null" >
+        #{mpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="mrealname != null" >
+        #{mrealname,jdbcType=VARCHAR},
+      </if>
+      <if test="midcard != null" >
+        #{midcard,jdbcType=VARCHAR},
+      </if>
+      <if test="mcontact != null" >
+        #{mcontact,jdbcType=VARCHAR},
+      </if>
+      <if test="msex != null" >
+        #{msex,jdbcType=VARCHAR},
+      </if>
+      <if test="maddress != null" >
+        #{maddress,jdbcType=VARCHAR},
+      </if>
+      <if test="msign != null" >
+        #{msign,jdbcType=VARCHAR},
+      </if>
+      <if test="mcancel != null" >
+        #{mcancel,jdbcType=VARCHAR},
+      </if>
+      <if test="mcredit != null" >
+        #{mcredit,jdbcType=VARCHAR},
+      </if>
+      <if test="mreport != null" >
+        #{mreport,jdbcType=VARCHAR},
+      </if>
+      <if test="mresume != null" >
+        #{mresume,jdbcType=VARCHAR},
+      </if>
+      <if test="minsettime != null" >
+        #{minsettime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mybatis.entity.MemberExample" resultType="java.lang.Integer" >
+    select count(*) from member
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update member
+    <set >
+      <if test="record.mid != null" >
+        mid = #{record.mid,jdbcType=INTEGER},
+      </if>
+      <if test="record.memname != null" >
+        memname = #{record.memname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mtouxiang != null" >
+        mtouxiang = #{record.mtouxiang,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mtel != null" >
+        mtel = #{record.mtel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mphone != null" >
+        mphone = #{record.mphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mqq != null" >
+        mqq = #{record.mqq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memail != null" >
+        memail = #{record.memail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mweibo != null" >
+        mweibo = #{record.mweibo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mwechat != null" >
+        mwechat = #{record.mwechat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mpassword != null" >
+        mpassword = #{record.mpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mrealname != null" >
+        mrealname = #{record.mrealname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.midcard != null" >
+        midcard = #{record.midcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcontact != null" >
+        mcontact = #{record.mcontact,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msex != null" >
+        msex = #{record.msex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.maddress != null" >
+        maddress = #{record.maddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.msign != null" >
+        msign = #{record.msign,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcancel != null" >
+        mcancel = #{record.mcancel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mcredit != null" >
+        mcredit = #{record.mcredit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mreport != null" >
+        mreport = #{record.mreport,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mresume != null" >
+        mresume = #{record.mresume,jdbcType=VARCHAR},
+      </if>
+      <if test="record.minsettime != null" >
+        minsettime = #{record.minsettime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update member
+    set mid = #{record.mid,jdbcType=INTEGER},
+      memname = #{record.memname,jdbcType=VARCHAR},
+      mtouxiang = #{record.mtouxiang,jdbcType=VARCHAR},
+      mtel = #{record.mtel,jdbcType=VARCHAR},
+      mphone = #{record.mphone,jdbcType=VARCHAR},
+      mqq = #{record.mqq,jdbcType=VARCHAR},
+      memail = #{record.memail,jdbcType=VARCHAR},
+      mweibo = #{record.mweibo,jdbcType=VARCHAR},
+      mwechat = #{record.mwechat,jdbcType=VARCHAR},
+      mpassword = #{record.mpassword,jdbcType=VARCHAR},
+      mrealname = #{record.mrealname,jdbcType=VARCHAR},
+      midcard = #{record.midcard,jdbcType=VARCHAR},
+      mcontact = #{record.mcontact,jdbcType=VARCHAR},
+      msex = #{record.msex,jdbcType=VARCHAR},
+      maddress = #{record.maddress,jdbcType=VARCHAR},
+      msign = #{record.msign,jdbcType=VARCHAR},
+      mcancel = #{record.mcancel,jdbcType=VARCHAR},
+      mcredit = #{record.mcredit,jdbcType=VARCHAR},
+      mreport = #{record.mreport,jdbcType=VARCHAR},
+      mresume = #{record.mresume,jdbcType=VARCHAR},
+      minsettime = #{record.minsettime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Member" >
+    update member
+    <set >
+      <if test="memname != null" >
+        memname = #{memname,jdbcType=VARCHAR},
+      </if>
+      <if test="mtouxiang != null" >
+        mtouxiang = #{mtouxiang,jdbcType=VARCHAR},
+      </if>
+      <if test="mtel != null" >
+        mtel = #{mtel,jdbcType=VARCHAR},
+      </if>
+      <if test="mphone != null" >
+        mphone = #{mphone,jdbcType=VARCHAR},
+      </if>
+      <if test="mqq != null" >
+        mqq = #{mqq,jdbcType=VARCHAR},
+      </if>
+      <if test="memail != null" >
+        memail = #{memail,jdbcType=VARCHAR},
+      </if>
+      <if test="mweibo != null" >
+        mweibo = #{mweibo,jdbcType=VARCHAR},
+      </if>
+      <if test="mwechat != null" >
+        mwechat = #{mwechat,jdbcType=VARCHAR},
+      </if>
+      <if test="mpassword != null" >
+        mpassword = #{mpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="mrealname != null" >
+        mrealname = #{mrealname,jdbcType=VARCHAR},
+      </if>
+      <if test="midcard != null" >
+        midcard = #{midcard,jdbcType=VARCHAR},
+      </if>
+      <if test="mcontact != null" >
+        mcontact = #{mcontact,jdbcType=VARCHAR},
+      </if>
+      <if test="msex != null" >
+        msex = #{msex,jdbcType=VARCHAR},
+      </if>
+      <if test="maddress != null" >
+        maddress = #{maddress,jdbcType=VARCHAR},
+      </if>
+      <if test="msign != null" >
+        msign = #{msign,jdbcType=VARCHAR},
+      </if>
+      <if test="mcancel != null" >
+        mcancel = #{mcancel,jdbcType=VARCHAR},
+      </if>
+      <if test="mcredit != null" >
+        mcredit = #{mcredit,jdbcType=VARCHAR},
+      </if>
+      <if test="mreport != null" >
+        mreport = #{mreport,jdbcType=VARCHAR},
+      </if>
+      <if test="mresume != null" >
+        mresume = #{mresume,jdbcType=VARCHAR},
+      </if>
+      <if test="minsettime != null" >
+        minsettime = #{minsettime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where mid = #{mid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Member" >
+    update member
+    set memname = #{memname,jdbcType=VARCHAR},
+      mtouxiang = #{mtouxiang,jdbcType=VARCHAR},
+      mtel = #{mtel,jdbcType=VARCHAR},
+      mphone = #{mphone,jdbcType=VARCHAR},
+      mqq = #{mqq,jdbcType=VARCHAR},
+      memail = #{memail,jdbcType=VARCHAR},
+      mweibo = #{mweibo,jdbcType=VARCHAR},
+      mwechat = #{mwechat,jdbcType=VARCHAR},
+      mpassword = #{mpassword,jdbcType=VARCHAR},
+      mrealname = #{mrealname,jdbcType=VARCHAR},
+      midcard = #{midcard,jdbcType=VARCHAR},
+      mcontact = #{mcontact,jdbcType=VARCHAR},
+      msex = #{msex,jdbcType=VARCHAR},
+      maddress = #{maddress,jdbcType=VARCHAR},
+      msign = #{msign,jdbcType=VARCHAR},
+      mcancel = #{mcancel,jdbcType=VARCHAR},
+      mcredit = #{mcredit,jdbcType=VARCHAR},
+      mreport = #{mreport,jdbcType=VARCHAR},
+      mresume = #{mresume,jdbcType=VARCHAR},
+      minsettime = #{minsettime,jdbcType=TIMESTAMP}
+    where mid = #{mid,jdbcType=INTEGER}
+  </update>
+</mapper>

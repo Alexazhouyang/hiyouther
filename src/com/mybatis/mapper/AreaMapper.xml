@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mybatis.mapper.AreaMapper" >
+  <resultMap id="BaseResultMap" type="com.mybatis.entity.Area" >
+    <id column="arid" property="arid" jdbcType="INTEGER" />
+    <result column="arname" property="arname" jdbcType="VARCHAR" />
+    <result column="arcountry" property="arcountry" jdbcType="VARCHAR" />
+    <result column="artype" property="artype" jdbcType="VARCHAR" />
+    <result column="artag" property="artag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    arid, arname, arcountry, artype, artag
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap">
+    select * from area
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from area
+    where arid = #{arid,jdbcType=INTEGER}
+  </select>
+   <select id="selectByAddress" resultMap="BaseResultMap" >
+    select *  from area where arname like '%${name}%' limit 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from area
+    where arid = #{arid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mybatis.entity.AreaExample" >
+    delete from area
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mybatis.entity.Area" >
+    insert into area (arid, arname, arcountry, 
+      artype, artag)
+    values (#{arid,jdbcType=INTEGER}, #{arname,jdbcType=VARCHAR}, #{arcountry,jdbcType=VARCHAR}, 
+      #{artype,jdbcType=VARCHAR}, #{artag,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mybatis.entity.Area" >
+    insert into area
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="arid != null" >
+        arid,
+      </if>
+      <if test="arname != null" >
+        arname,
+      </if>
+      <if test="arcountry != null" >
+        arcountry,
+      </if>
+      <if test="artype != null" >
+        artype,
+      </if>
+      <if test="artag != null" >
+        artag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="arid != null" >
+        #{arid,jdbcType=INTEGER},
+      </if>
+      <if test="arname != null" >
+        #{arname,jdbcType=VARCHAR},
+      </if>
+      <if test="arcountry != null" >
+        #{arcountry,jdbcType=VARCHAR},
+      </if>
+      <if test="artype != null" >
+        #{artype,jdbcType=VARCHAR},
+      </if>
+      <if test="artag != null" >
+        #{artag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mybatis.entity.AreaExample" resultType="java.lang.Integer" >
+    select count(*) from area
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update area
+    <set >
+      <if test="record.arid != null" >
+        arid = #{record.arid,jdbcType=INTEGER},
+      </if>
+      <if test="record.arname != null" >
+        arname = #{record.arname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.arcountry != null" >
+        arcountry = #{record.arcountry,jdbcType=VARCHAR},
+      </if>
+      <if test="record.artype != null" >
+        artype = #{record.artype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.artag != null" >
+        artag = #{record.artag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update area
+    set arid = #{record.arid,jdbcType=INTEGER},
+      arname = #{record.arname,jdbcType=VARCHAR},
+      arcountry = #{record.arcountry,jdbcType=VARCHAR},
+      artype = #{record.artype,jdbcType=VARCHAR},
+      artag = #{record.artag,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mybatis.entity.Area" >
+    update area
+    <set >
+      <if test="arname != null" >
+        arname = #{arname,jdbcType=VARCHAR},
+      </if>
+      <if test="arcountry != null" >
+        arcountry = #{arcountry,jdbcType=VARCHAR},
+      </if>
+      <if test="artype != null" >
+        artype = #{artype,jdbcType=VARCHAR},
+      </if>
+      <if test="artag != null" >
+        artag = #{artag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where arid = #{arid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mybatis.entity.Area" >
+    update area
+    set arname = #{arname,jdbcType=VARCHAR},
+      arcountry = #{arcountry,jdbcType=VARCHAR},
+      artype = #{artype,jdbcType=VARCHAR},
+      artag = #{artag,jdbcType=VARCHAR}
+    where arid = #{arid,jdbcType=INTEGER}
+  </update>
+</mapper>
